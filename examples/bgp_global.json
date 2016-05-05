@@ -1,0 +1,97 @@
+{
+    "openconfig-bgp:bgp": {
+        "neighbors": {
+            "neighbor": [
+                {
+                    "ebgp-multihop": {
+                        "config": {
+                            "enabled": true, 
+                            "multihop-ttl": 255
+                        }
+                    }, 
+                    "neighbor-address": "2001:db8::1", 
+                    "config": {
+                        "neighbor-address": "2001:db8::1", 
+                        "peer-as": 6643, 
+                        "description": ":a=6643:d=Jive:"
+                    }, 
+                    "afi-safis": {
+                        "afi-safi": [
+                            {
+                                "config": {
+                                    "enabled": true, 
+                                    "afi-safi-name": "openconfig-bgp-types:IPV6_UNICAST"
+                                }, 
+                                "afi-safi-name": "IPV6_UNICAST"
+                            }
+                        ]
+                    }
+                }, 
+                {
+                    "neighbor-address": "192.0.2.2", 
+                    "config": {
+                        "neighbor-address": "192.0.2.2", 
+                        "peer-as": 54113, 
+                        "description": ":a=54413:d=Fastly:"
+                    }, 
+                    "afi-safis": {
+                        "afi-safi": [
+                            {
+                                "config": {
+                                    "enabled": true, 
+                                    "afi-safi-name": "openconfig-bgp-types:IPV6_LABELED_UNICAST"
+                                }, 
+                                "afi-safi-name": "IPV6_LABELED_UNICAST"
+                            }, 
+                            {
+                                "config": {
+                                    "enabled": true, 
+                                    "afi-safi-name": "openconfig-bgp-types:IPV4_UNICAST"
+                                }, 
+                                "afi-safi-name": "IPV4_UNICAST"
+                            }
+                        ]
+                    }
+                }
+            ]
+        }, 
+        "global": {
+            "config": {
+                "as": 6643, 
+                "router-id": "192.0.2.1"
+            }, 
+            "afi-safis": {
+                "afi-safi": [
+                    {
+                        "use-multiple-paths": {
+                            "ebgp": {
+                                "config": {
+                                    "maximum-paths": 8
+                                }
+                            }
+                        }, 
+                        "config": {
+                            "enabled": true, 
+                            "afi-safi-name": "openconfig-bgp-types:IPV6_UNICAST"
+                        }, 
+                        "afi-safi-name": "IPV6_UNICAST"
+                    }, 
+                    {
+                        "use-multiple-paths": {
+                            "ebgp": {
+                                "config": {
+                                    "maximum-paths": 8
+                                }
+                            }
+                        }, 
+                        "config": {
+                            "enabled": true, 
+                            "afi-safi-name": "openconfig-bgp-types:IPV4_UNICAST"
+                        }, 
+                        "afi-safi-name": "IPV4_UNICAST"
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,45 @@
+router bgp {{ instance.global_.config.as_ }}
+
+  {% if instance.global_.graceful_restart.config.enabled %}
+  bgp graceful-restart
+  bgp graceful-restart restart-time {{ instance.global_.graceful_restart.config.restart_time }}
+  bgp graceful-restart stalepath-time {{ instance.global_.graceful_restart.config.stale_routes_time|int }}
+  {% endif %}
+
+  {% for name,afi_safi in instance.global_.afi_safis.afi_safi.iteritems() %}
+    {% if afi_safi.config.enabled %}
+    address-family {{ afi_safi.config.afi_safi_name|to_cisco_address_family }}
+    {% endif %}
+    {% if afi_safi.use_multiple_paths.ebgp.config.maximum_paths %}
+      maximum-paths {{ afi_safi.use_multiple_paths.ebgp.config.maximum_paths }}
+    {% endif %}
+    {% if afi_safi.use_multiple_paths.ibgp.config.maximum_paths %}
+      maximum-paths ibgp {{ afi_safi.use_multiple_paths.ibgp.config.maximum_paths }}
+    {% endif %}
+    exit-address-family
+  {% endfor %}
+
+  {% for address,neighbor in instance.neighbors.neighbor.iteritems() %}
+    {% if not neighbor.config.description|isdefault %}
+    neighbor {{ neighbor.config.neighbor_address }} description {{ neighbor.config.description }}
+    {% endif %}
+    {% if not neighbor.config.peer_as|isdefault %}
+    neighbor {{ neighbor.config.neighbor_address }} remote-as {{ neighbor.config.peer_as }}
+    {% endif %}
+    {% if neighbor.ebgp_multihop.enabled %}
+    neighbor {{ neighbor.config.neighbor_address }} ebgp-multihop {{ neighbor.ebgp_multihop.multihop_ttl }}
+    {% endif %}
+
+    {% for afi,af in neighbor.afi_safis.afi_safi.iteritems() %}
+      {% if af.config.enabled %}
+    address-family {{ afi|to_cisco_address_family }}
+      neighbor {{ neighbor.config.neighbor_address }} activate
+      {% endif %}
+      {% if afi == 'IPV4_LABELED_UNICAST' or afi == 'IPV6_LABELED_UNICAST' %}
+      neighbor {{ neighbor.config.neighbor_address }} send-label
+      {% endif %}
+    exit-address-family
+    {% endfor %}
+  {% endfor %}
+
+exit
