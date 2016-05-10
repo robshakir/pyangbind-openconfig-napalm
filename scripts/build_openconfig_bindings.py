@@ -41,6 +41,11 @@ def main():
                     },
                     {
                       "type": "REMOTE",
+                      "path": OC + "bgp/openconfig-bgp-policy.yang",
+                      "dir": "openconfig"
+                    },
+                    {
+                      "type": "REMOTE",
                       "path": OC + "bgp/openconfig-bgp.yang",
                       "dir": "openconfig"
                     },
@@ -78,6 +83,12 @@ def main():
                     {
                       "type": "REMOTE",
                       "path": RFC + "ietf-yang-types.yang",
+                      "dir": "include",
+                      "build": False,
+                    },
+                    {
+                      "type": "REMOTE",
+                      "path": RFC + "ietf-interfaces.yang",
                       "dir": "include",
                       "build": False,
                     },
@@ -128,6 +139,7 @@ def main():
   cmd += " --use-xpathhelper"
   cmd += " "
   cmd += files_str
+  print cmd
   os.system(cmd)
 
   for directory in remove_dirs:
